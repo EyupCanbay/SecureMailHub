@@ -32,7 +32,7 @@ func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) er
 	return nil
 }
 
-func (app *Config) writeSJON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -48,9 +48,10 @@ func (app *Config) writeSJON(w http.ResponseWriter, status int, data any, header
 	w.WriteHeader(status)
 	_, err = w.Write(out)
 	if err != nil {
+
 		return err
 	}
-	 
+
 	return nil
 }
 
@@ -64,6 +65,6 @@ func (app *Config) errorJSON(w http.ResponseWriter, err error, status ...int) er
 	var payload jsonResponse
 	payload.Error = true
 	payload.Message = err.Error()
-	
-	return app.writeSJON(w, statusCode, payload )
+
+	return app.writeJSON(w, statusCode, payload)
 }
