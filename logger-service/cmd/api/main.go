@@ -21,9 +21,9 @@ const (
 
 var client *mongo.Client
 
-type Config struct{
+type Config struct {
 	Models data.Models
-} 
+}
 
 func main() {
 	//connect to mongo
@@ -42,29 +42,37 @@ func main() {
 		if err = client.Disconnect(ctx); err != nil {
 			panic(err)
 		}
-	} ()
+	}()
 
 	app := Config{
 		Models: data.New(client),
 	}
 
 	//start web server
-	go app.serve()
-
-
-}
-
-func (app *Config) serve() {
+	//go app.serve()
 	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", webPort),
+		Addr:    fmt.Sprintf(":%s", webPort),
 		Handler: app.routes(),
 	}
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Panic()
 	}
+
 }
+
+// func (app *Config) serve() {
+// 	srv := &http.Server{
+// 		Addr:    fmt.Sprintf(":%s", webPort),
+// 		Handler: app.routes(),
+// 	}
+
+// 	err := srv.ListenAndServe()
+// 	if err != nil {
+// 		log.Panic()
+// 	}
+// }
 
 func connectToMongo() (*mongo.Client, error) {
 	// create connecction options
@@ -81,5 +89,6 @@ func connectToMongo() (*mongo.Client, error) {
 		return nil, err
 	}
 
+	log.Println("connected mongo")
 	return c, nil
 }
