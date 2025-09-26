@@ -12,6 +12,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    environment:
+      - RABBIT_URL=amqp://guest:guest@rabbitmq:5672/
+
 
   authentication-service:
     build:
@@ -84,3 +87,28 @@ services:
       MAIL_PASSWORD: ""
       FROM_NAME: "John Smith"
       FROM_ADDRESS: john.smith@example.com
+
+  rabbitmq:
+    image: "rabbitmq:4.1.1-management"
+    container_name: rabbitmq-container
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"   
+      - "15672:15672" 
+    volumes:
+      - ./db-data/rabbitmq/:/var/lib/rabbitmq/
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  listener-sevice:
+    build:
+      context: ./../listener-service
+      dockerfile: ./../listener-service/listener-service.dockerfile
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      - RABBIT_URL=amqp://guest:guest@rabbitmq:5672/
+
+  
