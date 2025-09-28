@@ -15,7 +15,7 @@ spec:
       containers:
       - name: mongo
         image: "mongo:4.2.17-bionic" 
-        resource:
+        resources:
           requests:
             memory: "64Mi"
             cpu: "250m"
