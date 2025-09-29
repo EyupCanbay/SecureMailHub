@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailer-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mailer-service
+  template:
+    metadata:
+      labels:
+        app: mailer-service
+    spec:
+      containers:
+      - name: mailer-service
+        image: "eyupcanbay/mailer-service:latest"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env: 
+          - name: MAIL_DOMAIN
+            value: "localhost"
+          - name: MAIL_HOST
+            value: "mailhog"
+          - name: MAIL_ENCRYPTION
+            value: none
+          - name: MAIL_USERNAME
+            value: ""
+          - name: MAIL_PASSWORD
+            value: ""
+          - name: FROM_NAME
+            value: "John Smith"
+          - name: FROM_ADDRESS
+            value: "john.smith@example.com"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailer-service
+spec:
+  selector:
+    app: mailer-service
+  ports:
+    - protocol: TCP
+      name: main-port
+      port: 80
+      targetPort: 80
+    - protocol: TCP
+      name: web-port
+      port: 1025
+      targetPort: 1025
+
