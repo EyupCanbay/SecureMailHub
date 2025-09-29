@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: broker-service
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: broker-service
