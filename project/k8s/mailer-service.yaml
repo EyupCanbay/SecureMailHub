@@ -26,9 +26,9 @@ spec:
         - containerPort: 80
         env: 
           - name: MAIL_DOMAIN
-            value: "localhost"
+            value: ""
           - name: MAIL_HOST
-            value: "mailhog"
+            value: "localhost"
           - name: MAIL_ENCRYPTION
             value: none
           - name: MAIL_USERNAME
@@ -39,6 +39,8 @@ spec:
             value: "John Smith"
           - name: FROM_ADDRESS
             value: "john.smith@example.com"
+          - name: MAIL_PORT
+            value: "1025"
 
 ---
 
@@ -54,8 +56,4 @@ spec:
       name: main-port
       port: 80
       targetPort: 80
-    - protocol: TCP
-      name: web-port
-      port: 1025
-      targetPort: 1025
 
