@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: broker-service
-        image: "eyupcanbay/broker-service:latest"
+        image: "eyupcanbay/broker-service:v1.0.1"
         resources: 
           requests: 
             memory: "64Mi"
@@ -30,16 +30,16 @@ spec:
 
 
 ---
-
 apiVersion: v1
 kind: Service 
 metadata:
   name: broker-service
 spec:
+  type: LoadBalancer 
   selector:
     app: broker-service
-  ports: 
+  ports:
     - protocol: TCP
       name: main-port
-      port: 80
+      port: 8080
       targetPort: 80

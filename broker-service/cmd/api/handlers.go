@@ -56,7 +56,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	case "auth":
 		app.authenticate(w, requestPayload.Auth)
 	case "log":
-		app.logItemViaRPC(w, requestPayload.Log)
+		app.logEventViaRabbit(w, requestPayload.Log)
 	case "mail":
 		app.sendMail(w, requestPayload.Mail)
 	default:
@@ -76,6 +76,8 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 		app.errorJSON(w, err)
 		return
 	}
+
+	request.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -224,14 +226,14 @@ func (app *Config) pushToQueue(name, msg string) error {
 	return nil
 }
 
-type RPCPayload struct{
+type RPCPayload struct {
 	Name string
 	Data string
 }
 
 func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 	client, err := rpc.Dial("tcp", "logger-service:5001")
-	if err != nil{
+	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
@@ -242,14 +244,14 @@ func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 	}
 
 	var result string
-	err = client.Call("RPCServer.LogInfo",rpcPayload, &result)
-	if err != nil{
+	err = client.Call("RPCServer.LogInfo", rpcPayload, &result)
+	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
 
 	payload := jsonResponse{
-		Error: false,
+		Error:   false,
 		Message: result,
 	}
 

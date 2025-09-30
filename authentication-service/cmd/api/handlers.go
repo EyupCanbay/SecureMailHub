@@ -21,11 +21,13 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 		app.errorJSON(w, err, http.StatusBadRequest)
 		return
 	}
+	fmt.Println("reqpayload", requestPayload)
 
 	//validate the user againist the database
 	user, err := app.Models.User.GetByEmail(requestPayload.Email)
 	if err != nil {
 		fmt.Println("validate gmail hatası")
+		fmt.Println(err)
 		app.errorJSON(w, errors.New("Invalid credentials"), http.StatusBadRequest)
 		return
 	}
@@ -78,4 +80,10 @@ func (app *Config) logRequest(name string, data string) error {
 
 	return nil
 
+}
+
+func (app *Config) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status": "ok", "message": "Health check successful"}`))
 }

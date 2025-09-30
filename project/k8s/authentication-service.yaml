@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment 
 metadata:
-  name: auth-service
+  name: authentication-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-service
+      app: authentication-service
   template:
     metadata:
       labels:
-        app: auth-service
+        app: authentication-service
     spec:
       containers:
-      - name: auth-service
-        image: "eyupcanbay/auth-service:latest" 
+      - name: authentication-service
+        image: "eyupcanbay/auth-service:v1.0.3"
         resources:
           requests:
             memory: "64Mi"
@@ -27,16 +27,27 @@ spec:
             value: "host=host.minikube.internal port=5432 user=postgres password=123 dbname=users sslmode=disable timezone=UTC connect_timeout=5"
         ports: 
           - containerPort: 80
-
+        readinessProbe:
+          httpGet:
+            path: /healthz      
+            port: 80
+          initialDelaySeconds: 5  
+          periodSeconds: 5      
+        
+        livenessProbe:
+          httpGet:
+            path: /healthz     
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20    
 ---
-
 apiVersion: v1
 kind: Service 
 metadata:
-  name: auth-service
+  name: authentication-service
 spec:
   selector:
-    app: auth-service
+    app: authentication-service
   ports: 
     - protocol: TCP
       name: main-port
