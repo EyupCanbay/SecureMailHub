@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mailer-service
-        image: "eyupcanbay/mailer-service:latest"
+        image: "eyupcanbay/mail-service:v1.0.2"
         resources:
           requests:
             memory: "64Mi"
@@ -28,7 +28,7 @@ spec:
           - name: MAIL_DOMAIN
             value: ""
           - name: MAIL_HOST
-            value: "localhost"
+            value: "mailhog"         
           - name: MAIL_ENCRYPTION
             value: none
           - name: MAIL_USERNAME
@@ -40,10 +40,8 @@ spec:
           - name: FROM_ADDRESS
             value: "john.smith@example.com"
           - name: MAIL_PORT
-            value: "1025"
-
+            value: "1025"            
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -56,4 +54,3 @@ spec:
       name: main-port
       port: 80
       targetPort: 80
-

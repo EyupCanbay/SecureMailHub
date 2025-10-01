@@ -46,5 +46,7 @@ func createMail() Mail {
 		FromAddress: os.Getenv("FROM_ADDRESS"),
 	}
 
+	log.Println(m)
+
 	return m
 }
