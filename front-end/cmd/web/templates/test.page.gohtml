@@ -155,7 +155,7 @@
             method: 'POST',
         }
 
-        fetch("http://127.0.0.1:8080", body)
+        fetch("http://broker-service:8080", body)
         .then((response) => response.json())
         .then((data) => {
             sent.innerHTML ="empty post request";
