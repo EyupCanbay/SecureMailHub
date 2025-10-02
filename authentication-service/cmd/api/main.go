@@ -24,7 +24,7 @@ type Config struct {
 }
 
 func main() {
-	log.Println("starting authentication service")
+	log.Printf("starting authentication service %s", webPort)
 
 	//TODO connected to DB
 	conn := connectToDB()

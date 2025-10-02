@@ -29,6 +29,7 @@ func NewConsumer(conn *amqp.Connection) (Consumer, error) {
 	if err != nil {
 		return Consumer{}, err
 	}
+	fmt.Println("new consumer oluştu")
 
 	return consumer, nil
 
@@ -39,6 +40,7 @@ func (consumer *Consumer) setUp() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("set up oluştu")
 
 	return declareExchange(channel)
 }
@@ -50,7 +52,11 @@ func (consumer *Consumer) Listen(topics []string) error {
 	}
 	defer ch.Close()
 
+	fmt.Println("dinlemeye başlanıyor")
+
 	q, err := declareRandomQueue(ch)
+	fmt.Println("dinlemede error yok")
+
 	if err != nil {
 		return err
 	}
@@ -69,10 +75,14 @@ func (consumer *Consumer) Listen(topics []string) error {
 		}
 	}
 
-	messages, err := ch.Consume(q.Name, "", true, false, false, false, nil)
+	fmt.Println("queue bind edildi")
+
+	messages, err := ch.Consume(q.Name, "", true, false, true, false, nil)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("queue consume edildi")
 
 	forever := make(chan bool)
 	go func() {
@@ -80,6 +90,7 @@ func (consumer *Consumer) Listen(topics []string) error {
 			var payload Payload
 			_ = json.Unmarshal(d.Body, &payload)
 
+			fmt.Println("payoad logu okunuyor  ", payload)
 			go handlePayload(payload)
 		}
 	}()
@@ -94,6 +105,8 @@ func handlePayload(payload Payload) {
 	switch payload.Name {
 	case "log", "event":
 		//log whatever we get
+		fmt.Println("log event edildi")
+
 		err := logEvent(payload)
 		if err != nil {
 			log.Println(err)

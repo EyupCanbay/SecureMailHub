@@ -84,6 +84,7 @@ func (app *Config) logRequest(name string, data string) error {
 
 func (app *Config) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	fmt.Println("istak healdtz e düştü")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"status": "ok", "message": "Health check successful"}`))
 }

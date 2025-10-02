@@ -1,6 +1,7 @@
 package event
 
 import (
+	"fmt"
 	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -35,7 +36,7 @@ func (e *Emitter) Push(event string, severity string) error {
 		false,
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body: []byte(event),
+			Body:        []byte(event),
 		},
 	)
 	if err != nil {
@@ -50,10 +51,13 @@ func NewEventEmitter(conn *amqp.Connection) (Emitter, error) {
 		connection: conn,
 	}
 
+	fmt.Println("new wemitere girdik")
+
 	err := emitter.setUp()
 	if err != nil {
 		return Emitter{}, nil
 	}
+	fmt.Println("new wemiter error yok ")
 
 	return emitter, nil
-}   
+}

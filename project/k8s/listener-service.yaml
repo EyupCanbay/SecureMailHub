@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: listener-service
-        image: "eyupcanbay/listener-service:latest" 
+        image: "eyupcanbay/listener-service:v1.0.2" 
         resources:
           requests:
             memory: "64Mi"

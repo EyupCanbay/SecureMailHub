@@ -56,6 +56,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	case "auth":
 		app.authenticate(w, requestPayload.Auth)
 	case "log":
+		fmt.Println("rabbite yazm afonksu çalışıyor")
 		app.logEventViaRabbit(w, requestPayload.Log)
 	case "mail":
 		app.sendMail(w, requestPayload.Mail)
@@ -194,11 +195,15 @@ func (app *Config) sendMail(w http.ResponseWriter, msg MailPayload) {
 }
 
 func (app *Config) logEventViaRabbit(w http.ResponseWriter, l LogPayload) {
+	fmt.Println("rabbite yazma fonkundayız")
 	err := app.pushToQueue(l.Name, l.Data)
 	if err != nil {
+		fmt.Println("rabbite yazmadı error var")
+
 		app.errorJSON(w, err)
 		return
 	}
+	fmt.Println("rabbite yazdı error yokk")
 
 	var payload jsonResponse
 	payload.Error = false
@@ -208,10 +213,16 @@ func (app *Config) logEventViaRabbit(w http.ResponseWriter, l LogPayload) {
 }
 
 func (app *Config) pushToQueue(name, msg string) error {
+	fmt.Println("push fonkundayız")
+
 	emiter, err := event.NewEventEmitter(app.Rabbit)
 	if err != nil {
+		fmt.Println("push emiter oluşmadı error var ", err)
+
 		return err
 	}
+	fmt.Println("push new emiter oluştu")
+
 
 	payload := LogPayload{
 		Name: name,
@@ -223,6 +234,7 @@ func (app *Config) pushToQueue(name, msg string) error {
 	if err != nil {
 		return err
 	}
+	
 	return nil
 }
 
