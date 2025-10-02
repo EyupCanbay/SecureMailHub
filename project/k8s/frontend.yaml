@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "eyupcanbay/frontend:v1.0.2"
+        resources: 
+          requests: 
+            memory: "64Mi"
+            cpu: "250m"
+          limits: 
+            memory: "128Mi"
+            cpu: "250m"
+        ports: 
+          - containerPort: 80
+        
+
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: frontend
+spec:
+  type: LoadBalancer 
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      name: main-port
+      port: 80
+      targetPort: 80
