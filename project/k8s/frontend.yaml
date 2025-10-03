@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: "eyupcanbay/frontend:v1.0.2"
+        image: "eyupcanbay/frontend:v1.0.6" # eskisi çalışan eyupcanbay/frontend:v1.0.2
         resources: 
           requests: 
             memory: "64Mi"
